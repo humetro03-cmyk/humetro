@@ -1,14 +1,14 @@
 {
   "name": "스마트 역무 마스터",
-  "short_name": "역무매뉴얼",
+  "short_name": "스마트 역무 마스터",
   "description": "부산교통공사 스마트 역무 마스터",
-  "start_url": "./index.html",
+  "start_url": "https://humetro03-cmyk.github.io/humetro/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#0056a0",
   "icons": [
     {
-      "src": "icon.png",
+      "src": "https://humetro03-cmyk.github.io/humetro/icon.png",
       "sizes": "192x192 512x512",
       "type": "image/png",
       "purpose": "any maskable"
