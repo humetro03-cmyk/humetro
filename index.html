@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>스마트 역무 마스터</title>
   
-  <!-- 안드로이드 / iOS 앱 설치 설정 -->
+  <!-- 안드로이드 / iOS 앱 설정 -->
   <link rel="manifest" href="./manifest.json">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -27,9 +27,16 @@
     body {
       display: flex;
       flex-direction: column;
-      /* 노치 및 다이내믹 아일랜드 영역만큼 정확히 내려줌 */
-      padding-top: max(44px, env(safe-area-inset-top));
+      padding-top: 0; /* PC 및 일반 브라우저에서는 여백 0 (흰 줄 제거) */
     }
+
+    /* 아이폰 홈 화면(전체화면 앱)으로 실행되었을 때만 상단 노치 여백 적용 */
+    @media all and (display-mode: standalone) {
+      body {
+        padding-top: max(44px, env(safe-area-inset-top));
+      }
+    }
+
     #appFrame {
       width: 100%;
       flex: 1;
