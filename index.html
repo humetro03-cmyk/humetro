@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>스마트 역무 마스터</title>
+  
+  <!-- PWA 안드로이드 매니페스트 -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0056a0">
+  
+  <!-- iOS Safari 전용 설정 -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="스마트 역무 마스터">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="icon" type="image/png" href="icon.png">
+  
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background-color: #0056a0; }
+    iframe { width: 100%; height: 100%; border: none; display: block; }
+  </style>
+</head>
+<body>
+  <!-- 구글 앱스 스크립트 웹앱 전체화면 연결 -->
+  <iframe src="https://script.google.com/macros/s/AKfycbz4Dd25pWumoWp_30y2QFcyG08CxZX-5kTIp_PB_GcXreRxsrNaTGXfWQBJwr9kjyqy/exec" allow="fullscreen; camera; microphone; geolocation"></iframe>
+</body>
+</html>
