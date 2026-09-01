@@ -8,8 +8,14 @@
   "theme_color": "#0056a0",
   "icons": [
     {
-      "src": "https://humetro03-cmyk.github.io/humetro/icon.png",
-      "sizes": "192x192 512x512",
+      "src": "https://humetro03-cmyk.github.io/humetro/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://humetro03-cmyk.github.io/humetro/icon-512.png",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     }
