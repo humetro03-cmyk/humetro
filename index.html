@@ -2,9 +2,9 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>스마트 역무 마스터</title>
-  
+
   <link rel="manifest" href="./manifest.json">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon" href="./icon-180.png">
     <link rel="apple-touch-icon-precomposed" href="./icon-180.png">
     <link rel="icon" type="image/png" href="./icon-192.png">
-  
+
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body {
@@ -38,5 +38,37 @@
 </head>
 <body>
   <iframe id="appFrame" src="https://script.google.com/macros/s/AKfycbz4Dd25pWumoWp_30y2QFcyG08CxZX-5kTIp_PB_GcXreRxsrNaTGXfWQBJwr9kjyqy/exec" allow="fullscreen; camera; microphone; geolocation"></iframe>
+
+  <!-- 공유 달력용: 초대 링크 전달 + 앱 저장소(이 페이지) 연결 -->
+  <script>
+  (function () {
+    var frame = document.getElementById('appFrame');
+
+    // 1) 초대 링크(?cal=코드)로 들어오면 앱 주소에 코드를 붙여서 전달
+    try {
+      var cal = new URLSearchParams(location.search).get('cal');
+      if (cal && /^[A-Za-z0-9]{4,12}$/.test(cal)) {
+        frame.src = frame.getAttribute('src').split('?')[0] + '?cal=' + cal;
+      }
+    } catch (e) {}
+
+    // 2) 앱이 "내 달력 정보"를 이 페이지 저장소에 보관/조회하도록 중계
+    //    (아이폰은 앱 안쪽 화면의 저장소를 앱 종료 때 지울 수 있어 이 페이지에 따로 보관)
+    var OK = /^https:\/\/[a-z0-9-]+\.googleusercontent\.com$/;
+    window.addEventListener('message', function (ev) {
+      var d = ev.data;
+      if (!d || d.hm !== 'bridge' || !OK.test(ev.origin)) return;
+      var k = String(d.k || '');
+      if (k.indexOf('HM_CAL_') !== 0) return;
+      try {
+        if (d.op === 'set') {
+          localStorage.setItem('HMB_' + k, String(d.v));
+        } else if (d.op === 'get') {
+          ev.source.postMessage({ hm: 'bridgeRes', id: d.id, v: localStorage.getItem('HMB_' + k) }, ev.origin);
+        }
+      } catch (e) {}
+    });
+  })();
+  </script>
 </body>
 </html>
