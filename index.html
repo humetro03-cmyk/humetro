@@ -37,23 +37,38 @@
   </style>
 </head>
 <body>
-  <iframe id="appFrame" src="https://script.google.com/macros/s/AKfycbz4Dd25pWumoWp_30y2QFcyG08CxZX-5kTIp_PB_GcXreRxsrNaTGXfWQBJwr9kjyqy/exec" allow="fullscreen; camera; microphone; geolocation"></iframe>
+  <iframe id="appFrame" allow="fullscreen; camera; microphone; geolocation"></iframe>
 
-  <!-- 공유 달력용: 초대 링크 전달 + 앱 저장소(이 페이지) 연결 -->
+  <!-- 앱 주소 구성: 이 기기 고유값(dev) + 초대 링크(cal)를 붙여서 앱을 불러옴 -->
   <script>
   (function () {
+    var BASE = 'https://script.google.com/macros/s/AKfycbz4Dd25pWumoWp_30y2QFcyG08CxZX-5kTIp_PB_GcXreRxsrNaTGXfWQBJwr9kjyqy/exec';
     var frame = document.getElementById('appFrame');
+    var q = [];
 
-    // 1) 초대 링크(?cal=코드)로 들어오면 앱 주소에 코드를 붙여서 전달
+    // 1) 이 기기(홈 화면 앱) 고유값: 처음 한 번 만들어 이 페이지 저장소에 보관
     try {
-      var cal = new URLSearchParams(location.search).get('cal');
-      if (cal && /^[A-Za-z0-9]{4,12}$/.test(cal)) {
-        frame.src = frame.getAttribute('src').split('?')[0] + '?cal=' + cal;
+      var dev = localStorage.getItem('HM_DEV');
+      if (!dev || !/^[A-Za-z0-9]{16,40}$/.test(dev)) {
+        var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
+        var r = new Uint8Array(28), s = '', i;
+        (window.crypto || window.msCrypto).getRandomValues(r);
+        for (i = 0; i < r.length; i++) s += chars.charAt(r[i] % chars.length);
+        dev = s;
+        localStorage.setItem('HM_DEV', dev);
       }
+      q.push('dev=' + dev);
     } catch (e) {}
 
-    // 2) 앱이 "내 달력 정보"를 이 페이지 저장소에 보관/조회하도록 중계
-    //    (아이폰은 앱 안쪽 화면의 저장소를 앱 종료 때 지울 수 있어 이 페이지에 따로 보관)
+    // 2) 초대 링크(?cal=코드)로 들어오면 코드를 앱 주소에 붙여서 전달
+    try {
+      var cal = new URLSearchParams(location.search).get('cal');
+      if (cal && /^[A-Za-z0-9]{4,12}$/.test(cal)) q.push('cal=' + cal);
+    } catch (e) {}
+
+    frame.src = BASE + (q.length ? '?' + q.join('&') : '');
+
+    // 3) 앱이 "내 달력 정보"를 이 페이지 저장소에 보관/조회하도록 중계
     var OK = /^https:\/\/[a-z0-9-]+\.googleusercontent\.com$/;
     window.addEventListener('message', function (ev) {
       var d = ev.data;
