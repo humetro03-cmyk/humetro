@@ -39,12 +39,12 @@
 <body>
   <iframe id="appFrame" allow="fullscreen; camera; microphone; geolocation"></iframe>
 
-  <!-- 앱 주소 구성: 이 기기 고유값(dev) + 초대 링크(cal)를 붙여서 앱을 불러옴 -->
+  <!-- 앱 주소 구성: 이 기기 고유값(dev) + 래퍼 버전(wv) + 초대 링크(cal)를 붙여서 앱을 불러옴 -->
   <script>
   (function () {
     var BASE = 'https://script.google.com/macros/s/AKfycbz4Dd25pWumoWp_30y2QFcyG08CxZX-5kTIp_PB_GcXreRxsrNaTGXfWQBJwr9kjyqy/exec';
     var frame = document.getElementById('appFrame');
-    var q = [];
+    var q = ['wv=3'];
 
     // 1) 이 기기(홈 화면 앱) 고유값: 처음 한 번 만들어 이 페이지 저장소에 보관
     try {
@@ -66,7 +66,7 @@
       if (cal && /^[A-Za-z0-9]{4,12}$/.test(cal)) q.push('cal=' + cal);
     } catch (e) {}
 
-    frame.src = BASE + (q.length ? '?' + q.join('&') : '');
+    frame.src = BASE + '?' + q.join('&');
 
     // 3) 앱이 "내 달력 정보"를 이 페이지 저장소에 보관/조회하도록 중계
     var OK = /^https:\/\/[a-z0-9-]+\.googleusercontent\.com$/;
@@ -83,6 +83,15 @@
         }
       } catch (e) {}
     });
+
+    // 4) 이 페이지가 폰에 오래된 상태로 남지 않도록, 접속할 때마다 최신 본을 다시 받아 저장
+    setTimeout(function () {
+      try {
+        var base = location.pathname.replace(/[^\/]*$/, '');
+        fetch(base, { cache: 'reload' }).catch(function () {});
+        fetch(base + 'index.html', { cache: 'reload' }).catch(function () {});
+      } catch (e) {}
+    }, 2000);
   })();
   </script>
 </body>
